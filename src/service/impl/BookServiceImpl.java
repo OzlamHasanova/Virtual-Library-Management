@@ -21,7 +21,7 @@ public class BookServiceImpl implements BookService {
         book.setTitle("Les Misérables");
         book.setAuthor("Victor Hugo");
         book.setStockQuantity(10);
-        book.setGenre(BookGenre.FICTION);
+        book.setGenre(BookGenre.NONFICTION);
         book.setPublicationDate(LocalDate.of(1862, 1, 1));
         book.setAvailable(true);
         library.add(book);
@@ -32,7 +32,7 @@ public class BookServiceImpl implements BookService {
         book.setTitle("Crime and Punishment");
         book.setAuthor("Fyodor Dostoevsky");
         book.setStockQuantity(5);
-        book.setGenre(BookGenre.FICTION);
+        book.setGenre(BookGenre.NONFICTION);
         book.setPublicationDate(LocalDate.of(1866, 1, 1));
         book.setAvailable(true);
         library.add(book);

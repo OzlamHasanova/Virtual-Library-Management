@@ -92,9 +92,19 @@ public class Authentication implements AuthenticationService {
         String password= scanner.next();
         user.setPassword(password);
         System.out.println("Email");
-        String email= scanner.next();
-        user.setEmail(email);
-        return email;
+        boolean isContinue=true;
+        while (isContinue) {
+            String email = scanner.next();
+            if (email.contains("@")) {
+                user.setEmail(email);
+                isContinue=false;
+                return email;
+            } else {
+                System.err.println("E-poçtda @ simvolu olmalıdır");
+            }
+        }
+        return null;
+
     }
 
     @Override

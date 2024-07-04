@@ -1,14 +1,14 @@
 package service.impl;
 
-import entity.Book;
 import entity.User;
-import enums.UserRole;
 import exception.UserAlreadyExistsException;
 import exception.UserNotFoundException;
 import service.UserService;
 
-import java.io.InvalidObjectException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
 
 public class UserServiceImpl implements UserService {
     private final Authentication authentication;
@@ -36,6 +36,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public void getMyProfile() {
+        User user = authentication.getCurrentUser();
+        System.out.println(user.toString());
         try {
             System.out.println("""
                     Choose Operation(number)
@@ -61,11 +63,10 @@ public class UserServiceImpl implements UserService {
             } else {
                 throw new UserAlreadyExistsException("This email use another user");
             }
-        } catch (IllegalArgumentException | UserAlreadyExistsException e) {
+        } catch (IllegalArgumentException | UserAlreadyExistsException | NullPointerException e) {
             System.err.println(e.getMessage());
         }
     }
-
 
 
     @Override
@@ -73,9 +74,9 @@ public class UserServiceImpl implements UserService {
         try {
             User user = authentication.getCurrentUser();
             System.out.println("""
-                Are you sure you want to delete the account?
-                1.No
-                2.Yes""");
+                    Are you sure you want to delete the account?
+                    1.No
+                    2.Yes""");
             int deleteSure = scanner.nextInt();
             if (deleteSure == 2) {
                 user = null;
@@ -93,11 +94,11 @@ public class UserServiceImpl implements UserService {
     public void searchUser() {
         try {
             System.out.println("""
-                Searching in Users for:
-                1.UserId
-                2.Name
-                3.UserRole
-               """);
+                     Searching in Users for:
+                     1.UserId
+                     2.Name
+                     3.UserRole
+                    """);
             int choose = scanner.nextInt();
             switch (choose) {
                 case 1 -> searchUserForUserID();
@@ -173,10 +174,10 @@ public class UserServiceImpl implements UserService {
     public void sortUsers() {
         try {
             System.out.println("""
-                Sorting in Users for:
-                1.User Id
-                2.User Name
-               """);
+                     Sorting in Users for:
+                     1.User Id
+                     2.User Name
+                    """);
             switch (scanner.nextInt()) {
                 case 1 -> sortUsersForUserId();
                 case 2 -> sortUsersForUserName();

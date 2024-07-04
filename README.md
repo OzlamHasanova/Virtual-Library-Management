@@ -1,0 +1,1 @@
+An interactive Library Management System project designed for practicing advanced Java Core functionalities. This console-based system manages books, users, and transactions, offering a practical application of Java programming concepts.

@@ -8,6 +8,7 @@ import exception.BookNotFoundException;
 import exception.InsufficientStockException;
 import service.LibraryManagementService;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -49,7 +50,7 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
                     book.getBookID(), borrowDate, null, TransactionType.BORROW);
             transactions.add(transaction);
             System.out.println(transaction);
-        } catch (BookNotFoundException | InsufficientStockException e) {
+        } catch (BookNotFoundException | InsufficientStockException | DateTimeException e) {
             System.err.println(e.getMessage());
         }
 
@@ -73,7 +74,7 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             transaction.setTransactionType(TransactionType.RETURN);
             transaction.setUserID(user.getUserID());
             System.out.println(transaction);
-        } catch (BookNotFoundException e) {
+        } catch (BookNotFoundException |DateTimeException e) {
             System.err.println(e.getMessage());
         }
     }

@@ -197,11 +197,16 @@ public class BookServiceImpl implements BookService {
         System.out.println("Enter book Author: ");
         String author = scanner.next();
         try {
+            boolean found = false;
             for (Book book :
                     library) {
                 if (Objects.equals(book.getAuthor(), author)) {
                     System.out.println(book);
+                    found=true;
                 }
+            }
+            if (!found) {
+                throw new BookNotFoundException("No Book found with author: " + author);
             }
         }catch (BookNotFoundException ex){
             System.err.println("Books not found with author name: " + author);
@@ -214,11 +219,16 @@ public class BookServiceImpl implements BookService {
         System.out.println("Enter book title: ");
         String title = scanner.next();
         try {
+            boolean found=false;
             for (Book book :
                     library) {
                 if (Objects.equals(book.getTitle(), title)) {
                     System.out.println(book);
+                    found=true;
                 }
+            }
+            if (!found) {
+                throw new BookNotFoundException("No book found with title: " + title);
             }
         }catch (BookNotFoundException ex){
             System.err.println("Books not found with title: " + title);

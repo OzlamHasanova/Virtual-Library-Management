@@ -96,4 +96,5 @@ public class Book {
                 ", isAvailable=" + isAvailable +
                 '}';
     }
+
 }

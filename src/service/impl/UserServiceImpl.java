@@ -3,6 +3,8 @@ package service.impl;
 import entity.Book;
 import entity.User;
 import enums.UserRole;
+import exception.UserAlreadyExistsException;
+import exception.UserNotFoundException;
 import service.UserService;
 
 import java.io.InvalidObjectException;
@@ -17,126 +19,171 @@ public class UserServiceImpl implements UserService {
         this.authentication = authentication;
     }
 
-
-    @Override
-    public void update() {
-        User user = authentication.getCurrentUser();
-        String name = scanner.next();
-        user.setName(name);
-        String address = scanner.next();
-        user.setAddress(address);
-        String phone = scanner.next();
-        user.setPhone(phone);
-        String password = scanner.next();
-        user.setPassword(password);
-        String email = scanner.next();
-        user.setEmail(email);
-        authentication.checkSameUser(email);
-        System.out.println("""
-                Enter your role number
-                1.Librarian
-                2.Member""");
-        int roleNumber = scanner.nextInt();
-        UserRole role;
-        if (roleNumber == 0) {
-            role = UserRole.LIBRARIAN;
-        } else if (roleNumber == 1) {
-            role = UserRole.MEMBER;
-        } else {
-            throw new IllegalArgumentException("Invalid data");
+    public void getSearchOrSortUsers() {
+        try {
+            System.out.println("""
+                    Choose Operation(number)
+                    1.Search User
+                    2.Sort Users""");
+            switch (scanner.nextInt()) {
+                case 1 -> searchUser();
+                case 2 -> sortUsers();
+                default -> throw new IllegalArgumentException("Invalid option selected");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
-        user.setUserRole(role);
-        if (authentication.checkSameUser(email)) {
-            System.out.println("Update is success \n" + user.toString());
-        } else {
-            System.err.println("You have an account");
+    }
+
+    public void getMyProfile() {
+        try {
+            System.out.println("""
+                    Choose Operation(number)
+                    1.Update
+                    2.Delete""");
+            switch (scanner.nextInt()) {
+                case 1 -> update();
+                case 2 -> delete();
+                default -> throw new IllegalArgumentException("Invalid option selected");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
-
-
     }
 
     @Override
+    public void update() {
+        try {
+            User user = authentication.getCurrentUser();
+            String email = Authentication.getInfoFromUser(scanner, user);
+            if (authentication.checkSameUser(email)) {
+                System.out.println("Update is success \n" + user.toString());
+            } else {
+                throw new UserAlreadyExistsException("This email use another user");
+            }
+        } catch (IllegalArgumentException | UserAlreadyExistsException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+
+
+    @Override
     public void delete() {
-        User user = authentication.getCurrentUser();
-        System.out.println("""
+        try {
+            User user = authentication.getCurrentUser();
+            System.out.println("""
                 Are you sure you want to delete the account?
                 1.No
                 2.Yes""");
-        int deleteSure= scanner.nextInt();
-        if(deleteSure==2){
-            user=null;
-            System.out.println("Account is deleted");
-        } else if (deleteSure==1) {
-
-        }else {
-            System.out.println("Invalid data");
+            int deleteSure = scanner.nextInt();
+            if (deleteSure == 2) {
+                user = null;
+                System.out.println("Account is deleted");
+            } else if (deleteSure != 1) {
+                throw new IllegalArgumentException("Invalid data");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
 
     }
 
     @Override
     public void searchUser() {
-        System.out.println("""
+        try {
+            System.out.println("""
                 Searching in Users for:
                 1.UserId
                 2.Name
                 3.UserRole
                """);
-        int choose= scanner.nextInt();
-        switch (choose){
-            case 1->searchUserForUserID();
-            case 2->searchUserForName();
-            case 3->searchUserForUserRole();
-            default -> System.err.println("Invalid data");// TODO: exception
+            int choose = scanner.nextInt();
+            switch (choose) {
+                case 1 -> searchUserForUserID();
+                case 2 -> searchUserForName();
+                case 3 -> searchUserForUserRole();
+                default -> throw new IllegalArgumentException("Invalid option selected");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
     }
 
     private void searchUserForUserRole() {
-        System.out.println("Enter user role: ");
-        String role=scanner.next().toLowerCase();
-        for (User user :
-                authentication.users) {
-            if(Objects.equals(user.getUserRole().name(),role)){
-                System.out.println(user.toString());
+        try {
+            System.out.println("Enter user role: ");
+            String role = scanner.next().toUpperCase();
+            boolean found = false;
+            for (User user : authentication.users) {
+                if (user.getUserRole().name().equals(role)) {
+                    System.out.println(user);
+                    found = true;
+                }
             }
+            if (!found) {
+                throw new UserNotFoundException("No users found with role: " + role);
+            }
+        } catch (UserNotFoundException e) {
+            System.err.println(e.getMessage());
         }
+
     }
 
     private void searchUserForName() {
-        System.out.println("Enter user Name: ");
-        String name=scanner.next();
-        for (User user :
-                authentication.users) {
-            if(Objects.equals(user.getName(),name)){
-                System.out.println(user.toString());
+        try {
+            System.out.println("Enter user Name: ");
+            String name = scanner.next();
+            boolean found = false;
+            for (User user : authentication.users) {
+                if (user.getName().equalsIgnoreCase(name)) {
+                    System.out.println(user);
+                    found = true;
+                }
             }
+            if (!found) {
+                throw new UserNotFoundException("No users found with name: " + name);
+            }
+        } catch (UserNotFoundException e) {
+            System.err.println(e.getMessage());
         }
     }
 
     private void searchUserForUserID() {
-        System.out.println("Enter user id: ");
-        Long userId=scanner.nextLong();
-        for (User user :
-                authentication.users) {
-            if(Objects.equals(user.getUserID(), userId)){
-                System.out.println(user.toString());
-                break;
+        try {
+            System.out.println("Enter user id: ");
+            Long userId = scanner.nextLong();
+            boolean found = false;
+            for (User user : authentication.users) {
+                if (user.getUserID().equals(userId)) {
+                    System.out.println(user);
+                    found = true;
+                    break;
+                }
             }
+            if (!found) {
+                throw new UserNotFoundException("No users found with ID: " + userId);
+            }
+        } catch (UserNotFoundException e) {
+            System.err.println(e.getMessage());
         }
     }
 
     @Override
     public void sortUsers() {
-        System.out.println("""
+        try {
+            System.out.println("""
                 Sorting in Users for:
                 1.User Id
                 2.User Name
                """);
-        int choose=scanner.nextInt();
-        switch (choose){
-            case 1->sortUsersForUserId();
-            case 2->sortUsersForUserName();
-            default -> System.err.println("Invalid data");// TODO: exception
+            switch (scanner.nextInt()) {
+                case 1 -> sortUsersForUserId();
+                case 2 -> sortUsersForUserName();
+                default -> throw new IllegalArgumentException("Invalid option selected");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
     }
 

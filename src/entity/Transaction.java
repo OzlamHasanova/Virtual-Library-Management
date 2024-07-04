@@ -5,7 +5,8 @@ import enums.TransactionType;
 import java.time.LocalDate;
 
 public class Transaction {
-    private Long transactionID=0L;
+    private static Long lastTransactionId=0L;
+    private Long transactionID;
     private Long userID;
     private Long bookID;
     private LocalDate borrowDate;
@@ -13,7 +14,7 @@ public class Transaction {
     private TransactionType transactionType;
 
     public Transaction(Long transactionID, Long userID, Long bookID, LocalDate borrowDate, LocalDate returnDate, TransactionType transactionType) {
-        this.transactionID = transactionID;
+        this.transactionID = ++lastTransactionId;
         this.userID = userID;
         this.bookID = bookID;
         this.borrowDate = borrowDate;
@@ -22,10 +23,11 @@ public class Transaction {
     }
 
     public Transaction() {
+        this.transactionID = ++lastTransactionId;
     }
 
     public Long getTransactionID() {
-        return transactionID;
+        return lastTransactionId;
     }
 
     public void setTransactionID(Long transactionID) {

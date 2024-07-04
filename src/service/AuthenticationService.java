@@ -1,7 +1,9 @@
 package service;
 
 
+import entity.User;
+
 public interface AuthenticationService {
      void register();
-    void login();
+     User login();
 }

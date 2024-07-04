@@ -2,6 +2,7 @@ package service.impl;
 
 import entity.Book;
 import enums.BookGenre;
+import exception.BookNotFoundException;
 import service.BookService;
 
 import java.time.LocalDate;
@@ -10,36 +11,73 @@ import java.util.*;
 public class BookServiceImpl implements BookService {
     Set<Book> library = new HashSet<>();
     Book book;
-    Scanner scanner=new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in);
+
+
     public BookServiceImpl() {
 
         book = new Book();
         book.setBookID(book.getBookID());
-        book.setTitle("The Great Gatsby");
-        book.setAuthor("F. Scott Fitzgerald");
+        book.setTitle("Les Misérables");
+        book.setAuthor("Victor Hugo");
         book.setStockQuantity(10);
         book.setGenre(BookGenre.FICTION);
-        book.setPublicationDate(LocalDate.of(1925, 4, 10));
+        book.setPublicationDate(LocalDate.of(1862, 1, 1));
         book.setAvailable(true);
         library.add(book);
         System.out.println(book.toString());
 
         book = new Book();
         book.setBookID(book.getBookID());
-        book.setTitle("Moby Dick");
-        book.setAuthor("Herman Melville");
+        book.setTitle("Crime and Punishment");
+        book.setAuthor("Fyodor Dostoevsky");
         book.setStockQuantity(5);
         book.setGenre(BookGenre.FICTION);
-        book.setPublicationDate(LocalDate.of(1851, 11, 14));
+        book.setPublicationDate(LocalDate.of(1866, 1, 1));
         book.setAvailable(true);
         library.add(book);
         System.out.println(book.toString());
     }
 
+    public void getBookMenu() {
+        System.out.println("""
+                Choose Operation(number)
+                1.Add
+                2.Update
+                3.Delete
+                """);
+        try {
+            switch (scanner.nextInt()) {
+                case 1 -> add();
+                case 2 -> update();
+                case 3 -> delete();
+                default -> throw new IllegalArgumentException("Invalid choice");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void getReportMenuAboutBook() {
+        System.out.println("""
+                Choose Operation(number)
+                1.Search book
+                2.Sort books""");
+        try {
+            switch (scanner.nextInt()) {
+                case 1 -> searchBook();
+                case 2 -> sortBooks();
+                default -> throw new IllegalArgumentException("Invalid choice");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
     @Override
     public void add() {
         System.out.println("Add Books to the Library");
-        book=new Book();
+        book = new Book();
         book.setBookID(book.getBookID());
         getInfoFromUser(book);
         library.add(book);
@@ -49,13 +87,13 @@ public class BookServiceImpl implements BookService {
 
     private void getInfoFromUser(Book book) {
         System.out.println("Title: ");
-        String title=scanner.next();
+        String title = scanner.next();
         book.setTitle(title);
         System.out.println("Author: ");
-        String author=scanner.next();
+        String author = scanner.next();
         book.setAuthor(author);
         System.out.println("Stock Quantity: ");
-        int stockCount=scanner.nextInt();
+        int stockCount = scanner.nextInt();
         book.setStockQuantity(stockCount);
         System.out.println("""
                 Genre:
@@ -65,40 +103,45 @@ public class BookServiceImpl implements BookService {
                  4.Art
                  5.Romance
                  6.Mystery""");
-        int genreEnumNumber=scanner.nextInt();
         BookGenre genre = null;
-        switch (genreEnumNumber){
-            case 1->genre= BookGenre.FICTION;
-            case 2->genre=BookGenre.NONFICTION;
-            case 3->genre=BookGenre.SCIENCE;
-            case 4->genre=BookGenre.ART;
-            case 5->genre=BookGenre.ROMANCE;
-            case 6->genre=BookGenre.MYSTERY;
-            default -> System.out.println();
+        try {
+            switch (scanner.nextInt()) {
+                case 1 -> book.setGenre(BookGenre.FICTION);
+                case 2 -> book.setGenre(BookGenre.NONFICTION);
+                case 3 -> book.setGenre(BookGenre.SCIENCE);
+                case 4 -> book.setGenre(BookGenre.ART);
+                case 5 -> book.setGenre(BookGenre.ROMANCE);
+                case 6 -> book.setGenre(BookGenre.MYSTERY);
+                default -> throw new IllegalArgumentException("Invalid genre choice");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
-        book.setGenre(genre);
-        System.out.print("Publication date(yyyy-mm-dd): ");
-        String date=scanner.next();
-        LocalDate publicationDate= LocalDate.parse(date);
-        book.setPublicationDate(publicationDate);
+
+        System.out.println("Publication date (yyyy-mm-dd): ");
+        book.setPublicationDate(LocalDate.parse(scanner.next()));
+
         System.out.println("""
                 Book is available?
-                1.Yes
-                2.No""");
-        boolean isAvailable = false;
-        switch (scanner.nextInt()){
-            case 1->isAvailable=true;
-            case 2->isAvailable=false;
-            default -> System.out.println();
+                1. Yes
+                2. No
+                """);
+        try {
+            switch (scanner.nextInt()) {
+                case 1 -> book.setAvailable(true);
+                case 2 -> book.setAvailable(false);
+                default -> throw new IllegalArgumentException("Invalid availability choice");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
-        book.setAvailable(isAvailable);
     }
 
     @Override
     public void update() {
         System.out.println("Book id: ");
-        Long id=scanner.nextLong();
-        Book book=getBookById(id);
+        Long id = scanner.nextLong();
+        Book book = getBookById(id);
         getInfoFromUser(book);
         System.out.println("Update is success");
     }
@@ -106,8 +149,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public void delete() {
         System.out.println("Book id: ");
-        Long id=scanner.nextLong();
-        Book book=getBookById(id);
+        Long id = scanner.nextLong();
+        Book book = getBookById(id);
         library.remove(book);
         System.out.println("Delete is success");
     }
@@ -119,47 +162,78 @@ public class BookServiceImpl implements BookService {
                 1.Title
                 2.Author
                 3.Genre""");
-        int choose= scanner.nextInt();
-        switch (choose){
-            case 1->searchBookForTitle();
-            case 2->searchBookForAuthor();
-            case 3->searchBookForGenre();
-            default -> System.err.println("Invalid data");// TODO: exception
+        try {
+            switch (scanner.nextInt()) {
+                case 1 -> searchBookForTitle();
+                case 2 -> searchBookForAuthor();
+                case 3 -> searchBookForGenre();
+                default -> throw new IllegalArgumentException("Invalid search choice");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
     }
 
-    private void searchBookForGenre() {
-        System.out.println("Enter book Genre: ");
-        String genre=scanner.next().toUpperCase();
-        for (Book book :
-                library) {
-            if(Objects.equals(book.getGenre().name(), genre)){
-                System.out.println(book);
+    protected void searchBookForGenre() {
+        System.out.println("Enter book Genre" +
+                "Genre: Fiction, Nonfiction, Science, Art, Romance, Mystery: ");
+
+        String genre = scanner.next().toUpperCase();
+        try {
+            for (Book book :
+                    library) {
+                if (Objects.equals(book.getGenre().name(), genre)) {
+                    System.out.println(book);
+                }
             }
-        }//todo exception bele kitab yoxdur
+        }catch (BookNotFoundException ex){
+            System.err.println("Books not found with genre: " + genre);
+
+        }
+
     }
 
-    private void searchBookForAuthor() {
+    void searchBookForAuthor() {
         System.out.println("Enter book Author: ");
-        String author=scanner.next();
-        for (Book book :
-                library) {
-            if(Objects.equals(book.getAuthor(), author)){
-                System.out.println(book);
+        String author = scanner.next();
+        try {
+            for (Book book :
+                    library) {
+                if (Objects.equals(book.getAuthor(), author)) {
+                    System.out.println(book);
+                }
             }
+        }catch (BookNotFoundException ex){
+            System.err.println("Books not found with author name: " + author);
+
         }
+
     }
 
     private void searchBookForTitle() {
         System.out.println("Enter book title: ");
-        String title=scanner.next();
+        String title = scanner.next();
+        try {
+            for (Book book :
+                    library) {
+                if (Objects.equals(book.getTitle(), title)) {
+                    System.out.println(book);
+                }
+            }
+        }catch (BookNotFoundException ex){
+            System.err.println("Books not found with title: " + title);
+
+        }
+    }
+
+    protected Book searchBookForTitle(String bookName) {
         for (Book book :
                 library) {
-            if(Objects.equals(book.getTitle(), title)){
-                System.out.println(book.toString());
+            if (Objects.equals(book.getTitle(), bookName)) {
+                return book;
             }
         }
-        System.out.println("Kitab tapilmadi");
+        return null;
     }
 
     @Override
@@ -168,11 +242,15 @@ public class BookServiceImpl implements BookService {
                 Choose element for sort library books
                 1.Title(A-Z)
                 2.Author(A-Z)""");
-        int choose=scanner.nextInt();
-        switch (choose){
-            case 1->sortBooksForTitle();
-            case 2->sortBooksForAuthor();
-            default -> System.err.println("Invalid data");// TODO: exception
+
+        try {
+            switch (scanner.nextInt()) {
+                case 1 -> sortBooksForTitle();
+                case 2 -> sortBooksForAuthor();
+                default -> throw new IllegalArgumentException("Invalid sort choice");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
 
     }
@@ -195,10 +273,10 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    private Book getBookById(Long id){
+    private Book getBookById(Long id) {
         for (Book book :
                 library) {
-            if(Objects.equals(book.getBookID(),id)){
+            if (Objects.equals(book.getBookID(), id)) {
                 return book;
             }
         }

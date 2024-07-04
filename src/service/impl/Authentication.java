@@ -1,9 +1,8 @@
 package service.impl;
 
-import dto.LoginDto;
-import dto.RegisterDto;
 import entity.User;
 import enums.UserRole;
+import exception.UserAlreadyExistsException;
 import service.AuthenticationService;
 
 import java.util.*;
@@ -35,7 +34,6 @@ public class Authentication implements AuthenticationService {
         user.setUserRole(UserRole.MEMBER);
         users.add(user);
         System.out.println(user);
-//        user=new User(user.getUserID(), "Ozcan","Baku","0507776655","ozlamhasanova@gmail.com","1234",UserRole.MEMBER);
 
     }
 
@@ -44,41 +42,63 @@ public class Authentication implements AuthenticationService {
         System.out.println("---Register---");
         user=new User();
         user.setUserID(user.getUserID());
-        String name=scanner.next();
-        user.setName(name);
-        String address=scanner.next();
-        user.setAddress(address);
-        String phone=scanner.next();
-        user.setPhone(phone);
-        String password=scanner.next();
-        user.setPassword(password);
-        String email=scanner.next();
-        user.setEmail(email);
-        checkSameUser(email);
+        getInfoFromUser(scanner, user);
         System.out.println("""
                 Enter your role number
                 1.Librarian
                 2.Member""");
         int roleNumber=scanner.nextInt();
         UserRole role;
-        if(roleNumber==0){
+        if(roleNumber==1){
             role=UserRole.LIBRARIAN;
-        } else if (roleNumber==1) {
+        } else if (roleNumber==2) {
             role=UserRole.MEMBER;
         }else{
             throw new IllegalArgumentException("Invalid data");
         }
         user.setUserRole(role);
-        if(checkSameUser(email)) {
-            users.add(user);
-            System.out.println("Register is success \n"+user.toString());
-        }else {
-            System.err.println("You have an account");
+
+        user.setUserRole(role);
+        try {
+            if (roleNumber == 1) {
+                role = UserRole.LIBRARIAN;
+            } else if (roleNumber == 2) {
+                role = UserRole.MEMBER;
+            } else {
+                throw new IllegalArgumentException("Invalid data");
+            }
+            if (!checkSameUser(user.getEmail())) {
+                users.add(user);
+                System.out.println("Register is success \n" + user.toString());
+            } else {
+                throw new UserAlreadyExistsException("You have an account with this email.");
+            }
+        } catch (UserAlreadyExistsException | IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
     }
 
+    protected static String getInfoFromUser(Scanner scanner, User user) {
+        System.out.println("Name: ");
+        String name= scanner.next();
+        user.setName(name);
+        System.out.println("Address: ");
+        String address= scanner.next();
+        user.setAddress(address);
+        System.out.println("Phone: ");
+        String phone= scanner.next();
+        user.setPhone(phone);
+        System.out.println("Password");
+        String password= scanner.next();
+        user.setPassword(password);
+        System.out.println("Email");
+        String email= scanner.next();
+        user.setEmail(email);
+        return email;
+    }
+
     @Override
-    public void login() {
+    public User login() {
         System.out.println("---Login---");
         System.out.print("Email: ");
         String email=scanner.next();
@@ -87,8 +107,10 @@ public class Authentication implements AuthenticationService {
         User findUser=getUser(email);
         if(Objects.equals(findUser.getPassword(),password)){
             System.out.println("success");
+            return findUser;
         }else {
             System.out.println("qaqa sehvdi nese");
+            return null;
         }
     }
     private User getUser(String email){
@@ -104,7 +126,7 @@ public class Authentication implements AuthenticationService {
         return users.get(users.size()-1);
     }
 
-    public boolean checkSameUser(String email){//TODO: BU METHOD ISLMEIR OVLAD
+    public boolean checkSameUser(String email){
         for (User userItem :
                 users) {
             System.out.println(Objects.equals(userItem.getEmail(),email));

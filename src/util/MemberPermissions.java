@@ -24,7 +24,8 @@ public class MemberPermissions {
                  2.Return Book
                  3.Add Book My Favorite List
                  4.Show My Favorite List
-                 5.My profile
+                 5.Show Reserved Book List
+                 6.My profile
                 """);
         switch (scanner.nextInt()) {
             case 1 -> {
@@ -43,7 +44,11 @@ public class MemberPermissions {
                 libraryManagementService.showFavoriteList();
                 goBack();
             }
-            case 5 -> {
+            case 5->{
+                libraryManagementService.showReservedList();
+                goBack();
+            }
+            case 6 -> {
                 userService.getMyProfile();
                 goBack();
             }

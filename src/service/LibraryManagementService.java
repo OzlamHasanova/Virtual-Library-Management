@@ -6,4 +6,5 @@ public interface LibraryManagementService {
     void displayLibraryTransactions();
     void addBookFavoriteList();
     void showFavoriteList();
+    void showReservedList();
 }

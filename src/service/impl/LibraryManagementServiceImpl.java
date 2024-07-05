@@ -43,6 +43,10 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             } else {
                 throw new InsufficientStockException("Insufficient stock for the book: " + name);
             }
+            if(!book.getAvailable()){
+                System.out.println("Book added your reserved book list. Please wait until the book is available");
+                user.getMyReservedBooks().add(book);
+            }
             user.getBorrowBooks().add(book);
 
             LocalDate borrowDate = LocalDate.now();
@@ -117,6 +121,26 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             System.out.println(book);
         }
     }
+    public void showReservedList() {
+        User user = authentication.getCurrentUser();
+        System.out.println("Your reserved books list ");
+        for (Book book :
+                user.getMyReservedBooks()) {
+            System.out.println(book);
+            if(book.getAvailable()){
+                System.out.println("""
+            Is already available ->"+book.getTitle()
+            
+            Do you want borrow this book?(enter Yes or No)
+            """);
+                if(scanner.next().equalsIgnoreCase("Yes")){
+                    borrowBook();
+                }
+
+            }
+
+        }
+    }
 
     private void showAllBooks() {
         for (Book book : bookService.library) {
@@ -129,6 +153,20 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
                 bookService.library) {
             if (Objects.equals(book.getTitle(), title) && book.getAvailable()) {
                 return book;
+            } else if (Objects.equals(book.getTitle(), title) && !book.getAvailable()) {
+                System.out.println("""
+                This book is not available now, do you want to reserve the book?
+                1.Yes
+                2.No""");
+                switch (scanner.nextInt()){
+                    case 1 -> {
+                        return book;
+                    }
+                    case 2-> {
+                        return null;
+                    }
+
+                }
             }
         }
         return null;

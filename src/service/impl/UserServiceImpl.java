@@ -19,21 +19,7 @@ public class UserServiceImpl implements UserService {
         this.authentication = authentication;
     }
 
-    public void getSearchOrSortUsers() {
-        try {
-            System.out.println("""
-                    Choose Operation(number)
-                    1.Search User
-                    2.Sort Users""");
-            switch (scanner.nextInt()) {
-                case 1 -> searchUser();
-                case 2 -> sortUsers();
-                default -> throw new IllegalArgumentException("Invalid option selected");
-            }
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-        }
-    }
+
 
     public void getMyProfile() {
         User user = authentication.getCurrentUser();

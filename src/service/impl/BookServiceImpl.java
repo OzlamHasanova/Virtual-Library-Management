@@ -39,40 +39,6 @@ public class BookServiceImpl implements BookService {
         System.out.println(book.toString());
     }
 
-    public void getBookMenu() {
-        System.out.println("""
-                Choose Operation(number)
-                1.Add
-                2.Update
-                3.Delete
-                """);
-        try {
-            switch (scanner.nextInt()) {
-                case 1 -> add();
-                case 2 -> update();
-                case 3 -> delete();
-                default -> throw new IllegalArgumentException("Invalid choice");
-            }
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
-    public void getReportMenuAboutBook() {
-        System.out.println("""
-                Choose Operation(number)
-                1.Search book
-                2.Sort books""");
-        try {
-            switch (scanner.nextInt()) {
-                case 1 -> searchBook();
-                case 2 -> sortBooks();
-                default -> throw new IllegalArgumentException("Invalid choice");
-            }
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-        }
-    }
 
     @Override
     public void add() {

@@ -19,26 +19,7 @@ public class ReportServiceImpl implements ReportService {
         this.bookService = bookService;
         this.libraryManagementService = libraryManagementService;
     }
-    public void getReportMenu(){
-        try {
-            System.out.println("""
-                Choose Operation(number)
-                1.Currently Borrowed Books
-                2.Overdue Books
-                3.Transaction for specific user
-                4.Books by Genre or Author
-                """);
-            switch (scanner.nextInt()) {
-                case 1 -> getCurrentlyBorrowedBooks();
-                case 2 -> getOverdueBooks();
-                case 3 -> getTransactionsForSpecificUser();
-                case 4 -> getBooksByGenreOrAuthor();
-                default -> throw new IllegalArgumentException("Invalid option selected");
-            }
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-        }
-    }
+
 
     @Override
     public void getCurrentlyBorrowedBooks() {

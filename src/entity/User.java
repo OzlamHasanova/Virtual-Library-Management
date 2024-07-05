@@ -15,6 +15,7 @@ public class User {
     private String email;
     private String password;
     private UserRole userRole;
+    private double deposit=0;
     private List<Transaction> transactions=new ArrayList<>();
     private List<Book> myFavoriteBooks=new ArrayList<>();
     private List<Book> borrowBooks=new ArrayList<>();
@@ -86,6 +87,14 @@ public class User {
 
     public UserRole getUserRole() {
         return userRole;
+    }
+
+    public double getDeposit() {
+        return deposit;
+    }
+
+    public void setDeposit(double deposit) {
+        this.deposit = deposit;
     }
 
     public void setUserRole(UserRole userRole) {

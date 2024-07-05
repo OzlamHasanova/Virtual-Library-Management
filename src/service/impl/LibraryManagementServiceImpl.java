@@ -32,17 +32,22 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
         try {
             transaction = new Transaction();
             User user = authentication.getCurrentUser();
+            while (user.getDeposit()<10){
+                System.out.println("If you want to borrow a book, top up your balance by $10+");
+                topUpBalance();
+            }
             System.out.println("Which book do you want to borrow? Please enter book name");
             showAllBooks();
-            String name = scanner.nextLine();
+            Scanner scanner1=new Scanner(System.in);
+            String name = scanner1.nextLine();
             Book book = getBookByName(name);
             if (book == null) {
-                throw new BookNotFoundException("Book not found: " + name);
+                throw new BookNotFoundException("Book not found ");
             }
             if (checkStockQuantity(book.getStockQuantity())) {
                 book.setStockQuantity(book.getStockQuantity() - 1);
             } else {
-                throw new InsufficientStockException("Insufficient stock for the book: " + name);
+                throw new InsufficientStockException("Insufficient stock for the book ");
             }
             if (!book.getAvailable()) {
                 System.out.println("Book added your reserved book list. Please wait until the book is available");
@@ -68,7 +73,8 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             User user = authentication.getCurrentUser();
             System.out.println("Which book do you want to return? " + "Please enter book name");
             showAllBooks();
-            String name = scanner.nextLine();
+            Scanner scanner1=new Scanner(System.in);
+            String name = scanner1.nextLine();
             Book book = getBookByName(name);
             if (book == null) {
                 throw new BookNotFoundException("Book not found: " + name);
@@ -103,7 +109,7 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
 
             showAllBooks();
             System.out.println("Enter the name of the book you want to add to the favorite list: ");
-            String name = scanner.next();
+            String name = scanner.nextLine();
             Book book = bookService.searchBookForTitle(name);
             if (book == null) {
                 throw new BookNotFoundException("Book not found: " + name);
@@ -170,6 +176,12 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             }
         }
         return null;
+    }
+    private void topUpBalance(){
+        User user=authentication.getCurrentUser();
+        System.out.println("Enter the amount");
+        double amount=scanner.nextDouble();
+        user.setDeposit(user.getDeposit()+amount);
     }
 
     private boolean checkStockQuantity(int stockQuantity) {

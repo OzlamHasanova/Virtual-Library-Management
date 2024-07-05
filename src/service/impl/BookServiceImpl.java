@@ -18,7 +18,7 @@ public class BookServiceImpl implements BookService {
 
         book = new Book();
         book.setBookID(book.getBookID());
-        book.setTitle("Les Misérables");
+        book.setTitle("Miserables");
         book.setAuthor("Victor Hugo");
         book.setStockQuantity(10);
         book.setGenre(BookGenre.NONFICTION);
@@ -29,7 +29,7 @@ public class BookServiceImpl implements BookService {
 
         book = new Book();
         book.setBookID(book.getBookID());
-        book.setTitle("Crime and Punishment");
+        book.setTitle("Crime");
         book.setAuthor("Fyodor Dostoevsky");
         book.setStockQuantity(5);
         book.setGenre(BookGenre.NONFICTION);
@@ -182,7 +182,7 @@ public class BookServiceImpl implements BookService {
 
     private void searchBookForTitle() {
         System.out.println("Enter book title: ");
-        String title = scanner.next();
+        String title = scanner.nextLine();
         try {
             boolean found=false;
             for (Book book :

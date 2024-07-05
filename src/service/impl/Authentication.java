@@ -2,7 +2,9 @@ package service.impl;
 
 import entity.User;
 import enums.UserRole;
+import exception.InvalidPasswordException;
 import exception.UserAlreadyExistsException;
+import exception.UserNotFoundException;
 import service.AuthenticationService;
 
 import java.util.*;
@@ -109,19 +111,34 @@ public class Authentication implements AuthenticationService {
 
     @Override
     public User login() {
-        System.out.println("---Login---");
-        System.out.print("Email: ");
-        String email=scanner.next();
-        System.out.print("Password: ");
-        String password=scanner.next();
-        User findUser=getUser(email);
-        if(Objects.equals(findUser.getPassword(),password)){
-            System.out.println("success");
-            return findUser;
-        }else {
-            System.out.println("qaqa sehvdi nese");
-            return null;
+        int count=0;
+        try {
+            System.out.println("---Login---");
+            System.out.print("Email: ");
+            String email=scanner.next();
+            System.out.print("Password: ");
+            String password=scanner.next();
+            User findUser=getUser(email);
+            if(Objects.equals(findUser.getPassword(),password)&&Objects.equals(findUser.getEmail(),email)){
+                System.out.println("Login is success");
+                return findUser;
+            } else if (Objects.equals(findUser.getPassword(), password) && !Objects.equals(findUser.getEmail(), email)) {
+                throw new UserNotFoundException("User not found this email "+email);
+            } else if (!Objects.equals(findUser.getPassword(),password)&&Objects.equals(findUser.getEmail(),email)) {
+                throw new InvalidPasswordException("Invalid password");
+            }
+        }catch (UserNotFoundException|InvalidPasswordException e){
+            System.err.println(e.getMessage());
+            System.out.println("Try again");
+            count++;
+            if(count==3){
+                System.out.println("You have exceeded the limit");
+                System.exit(0);
+            }
+            login();
         }
+
+        return null;
     }
     private User getUser(String email){
         for (User findUser :

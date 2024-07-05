@@ -5,6 +5,7 @@ import enums.TransactionType;
 import exception.BookNotFoundException;
 import service.ReportService;
 
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Scanner;
 
@@ -45,7 +46,7 @@ public class ReportServiceImpl implements ReportService {
             boolean found = false;
             for (Transaction transaction : libraryManagementService.transactions) {
                 if (transaction.getReturnDate() == null && ChronoUnit.DAYS.between(
-                        transaction.getBorrowDate(),transaction.getBorrowDate().plusDays(10)) > 10) {
+                        transaction.getBorrowDate(), LocalDate.now()) > 10) {
                     System.out.println(transaction);
                     found = true;
                 }

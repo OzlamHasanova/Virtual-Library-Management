@@ -2,6 +2,7 @@ package entity;
 
 import enums.UserRole;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -14,10 +15,10 @@ public class User {
     private String email;
     private String password;
     private UserRole userRole;
-    private List<Transaction> transactions;
-    private List<Book> myFavoriteBooks;
-    private List<Book> borrowBooks;
-    private List<Book> myReservedBooks;
+    private List<Transaction> transactions=new ArrayList<>();
+    private List<Book> myFavoriteBooks=new ArrayList<>();
+    private List<Book> borrowBooks=new ArrayList<>();
+    private List<Book> myReservedBooks=new ArrayList<>();
 
 
 

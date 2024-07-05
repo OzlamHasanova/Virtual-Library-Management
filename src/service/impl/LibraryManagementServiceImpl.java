@@ -33,7 +33,7 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             User user = authentication.getCurrentUser();
             System.out.println("Which book do you want to borrow? Please enter book name");
             showAllBooks();
-            String name = scanner.next();
+            String name = scanner.nextLine();
             Book book = getBookByName(name);
             if (book == null) {
                 throw new BookNotFoundException("Book not found: " + name);
@@ -65,7 +65,7 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             System.out.println("Which book do you want to return? " +
                     "Please enter book name");
             showAllBooks();
-            String name = scanner.next();
+            String name = scanner.nextLine();
             Book book = getBookByName(name);
             if (book == null) {
                 throw new BookNotFoundException("Book not found: " + name);

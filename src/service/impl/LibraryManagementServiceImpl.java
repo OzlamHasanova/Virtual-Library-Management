@@ -88,7 +88,10 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             int rentDayCount = (int) ChronoUnit.DAYS.between(transaction.getReturnDate(), transaction.getBorrowDate());
             if (rentDayCount > 10) {
                 double feeForOverdueBook = ((rentDayCount - 10) * 0.5);
-                System.out.printf("Your book is already %d days late, you have to pay %.2f USD%n", rentDayCount, feeForOverdueBook);
+                System.out.printf("Your book is already %d days late, deducted from your deposit %.2f USD%n", rentDayCount, feeForOverdueBook);
+                user.setDeposit(user.getDeposit()-feeForOverdueBook);
+                System.out.println("Your current balance: "+user.getDeposit());
+
             }
         } catch (BookNotFoundException | DateTimeException e) {
             System.err.println(e.getMessage());

@@ -17,7 +17,6 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
     private final BookServiceImpl bookService;
     Scanner scanner = new Scanner(System.in);
     List<Transaction> transactions = new ArrayList<>();
-    Set<Book> myFavorites = new HashSet<>();
     Transaction transaction;
 
     public LibraryManagementServiceImpl(Authentication authentication, BookServiceImpl bookService) {
@@ -44,11 +43,13 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             } else {
                 throw new InsufficientStockException("Insufficient stock for the book: " + name);
             }
+            user.getBorrowBooks().add(book);
 
             LocalDate borrowDate = LocalDate.now();
             transaction = new Transaction(transaction.getTransactionID() + 1, user.getUserID(),
                     book.getBookID(), borrowDate, null, TransactionType.BORROW);
             transactions.add(transaction);
+            user.getTransactions().add(transaction);
             System.out.println(book);
             System.out.println(transaction);
         } catch (BookNotFoundException | InsufficientStockException | DateTimeException e) {
@@ -74,6 +75,7 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             transaction.setReturnDate(returnDate);
             transaction.setTransactionType(TransactionType.RETURN);
             transaction.setUserID(user.getUserID());
+            user.getTransactions().add(transaction);
             System.out.println(transaction);
         } catch (BookNotFoundException |DateTimeException e) {
             System.err.println(e.getMessage());
@@ -91,6 +93,8 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
     @Override
     public void addBookFavoriteList() {
         try {
+            User user = authentication.getCurrentUser();
+
             showAllBooks();
             System.out.println("Enter the name of the book you want to add to the favorite list: ");
             String name = scanner.next();
@@ -98,7 +102,7 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             if (book == null) {
                 throw new BookNotFoundException("Book not found: " + name);
             }
-            myFavorites.add(book);
+            user.getMyFavoriteBooks().add(book);
         } catch (BookNotFoundException e) {
             System.err.println(e.getMessage());
         }
@@ -106,9 +110,10 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
 
     @Override
     public void showFavoriteList() {
+        User user = authentication.getCurrentUser();
         System.out.println("Your favorite list❤️ ");
         for (Book book :
-                myFavorites) {
+                user.getMyFavoriteBooks()) {
             System.out.println(book);
         }
     }

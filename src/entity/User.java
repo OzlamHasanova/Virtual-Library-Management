@@ -15,6 +15,9 @@ public class User {
     private String password;
     private UserRole userRole;
     private List<Transaction> transactions;
+    private List<Book> myFavoriteBooks;
+    private List<Book> borrowBooks;
+    private List<Book> myReservedBooks;
 
 
 
@@ -89,6 +92,30 @@ public class User {
     }
     public List<Transaction> getTransactions() {
         return transactions;
+    }
+
+    public List<Book> getMyFavoriteBooks() {
+        return myFavoriteBooks;
+    }
+
+    public void setMyFavoriteBooks(List<Book> myFavoriteBooks) {
+        this.myFavoriteBooks = myFavoriteBooks;
+    }
+
+    public List<Book> getBorrowBooks() {
+        return borrowBooks;
+    }
+
+    public void setBorrowBooks(List<Book> borrowBooks) {
+        this.borrowBooks = borrowBooks;
+    }
+
+    public List<Book> getMyReservedBooks() {
+        return myReservedBooks;
+    }
+
+    public void setMyReservedBooks(List<Book> myReservedBooks) {
+        this.myReservedBooks = myReservedBooks;
     }
 
     public void setTransactions(List<Transaction> transactions) {

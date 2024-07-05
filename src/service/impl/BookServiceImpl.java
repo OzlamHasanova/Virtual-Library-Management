@@ -69,7 +69,6 @@ public class BookServiceImpl implements BookService {
                  4.Art
                  5.Romance
                  6.Mystery""");
-        BookGenre genre = null;
         try {
             switch (scanner.nextInt()) {
                 case 1 -> book.setGenre(BookGenre.FICTION);

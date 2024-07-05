@@ -23,7 +23,7 @@ public class BookServiceImpl implements BookService {
         book.setStockQuantity(10);
         book.setGenre(BookGenre.NONFICTION);
         book.setPublicationDate(LocalDate.of(1862, 1, 1));
-        book.setAvailable(true);
+        book.setAvailable(false);
         library.add(book);
         System.out.println(book.toString());
 

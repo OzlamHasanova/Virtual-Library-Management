@@ -133,14 +133,12 @@ public class Authentication implements AuthenticationService {
         return null;
     }
     public User getCurrentUser(){
-        System.out.println("my user: "+users.get(users.size()-1).toString());
         return users.get(users.size()-1);
     }
 
     public boolean checkSameUser(String email){
         for (User userItem :
                 users) {
-            System.out.println(Objects.equals(userItem.getEmail(),email));
             if(!Objects.equals(userItem.getEmail(),email)){
                 return false;
             }

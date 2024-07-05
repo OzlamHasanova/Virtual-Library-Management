@@ -34,8 +34,8 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             User user = authentication.getCurrentUser();
             System.out.println("Which book do you want to borrow? Please enter book name");
             showAllBooks();
-            Long name = scanner.nextLong();
-            Book book = getBookById(name);
+            String name = scanner.next();
+            Book book = getBookByName(name);
             if (book == null) {
                 throw new BookNotFoundException("Book not found: " + name);
             }
@@ -49,6 +49,7 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             transaction = new Transaction(transaction.getTransactionID() + 1, user.getUserID(),
                     book.getBookID(), borrowDate, null, TransactionType.BORROW);
             transactions.add(transaction);
+            System.out.println(book);
             System.out.println(transaction);
         } catch (BookNotFoundException | InsufficientStockException | DateTimeException e) {
             System.err.println(e.getMessage());
@@ -63,8 +64,8 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             System.out.println("Which book do you want to return? " +
                     "Please enter book name");
             showAllBooks();
-            Long name = scanner.nextLong();
-            Book book = getBookById(name);
+            String name = scanner.next();
+            Book book = getBookByName(name);
             if (book == null) {
                 throw new BookNotFoundException("Book not found: " + name);
             }
@@ -118,10 +119,10 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
         }
     }
 
-    private Book getBookById(Long id) {
+    private Book getBookByName(String title) {
         for (Book book :
                 bookService.library) {
-            if (Objects.equals(book.getBookID(), id) && book.getAvailable()) {
+            if (Objects.equals(book.getTitle(), title) && book.getAvailable()) {
                 return book;
             }
         }

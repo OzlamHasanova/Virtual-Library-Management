@@ -7,6 +7,7 @@ import service.BookService;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class BookServiceImpl implements BookService {
     Set<Book> library = new HashSet<>();

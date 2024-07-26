@@ -8,6 +8,7 @@ import exception.UserNotFoundException;
 import service.AuthenticationService;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class Authentication implements AuthenticationService {
     Scanner scanner = new Scanner(System.in);

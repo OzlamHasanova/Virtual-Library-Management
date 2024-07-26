@@ -3,7 +3,9 @@ package entity;
 import enums.UserRole;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class User {
     private static Long lastUserID=0L;
@@ -17,9 +19,9 @@ public class User {
     private UserRole userRole;
     private double deposit=0;
     private List<Transaction> transactions=new ArrayList<>();
-    private List<Book> myFavoriteBooks=new ArrayList<>();
-    private List<Book> borrowBooks=new ArrayList<>();
-    private List<Book> myReservedBooks=new ArrayList<>();
+    private Set<Book> myFavoriteBooks=new HashSet<>();
+    private Set<Book> borrowBooks=new HashSet<>();
+    private Set<Book> myReservedBooks=new HashSet<>();
 
 
 
@@ -104,27 +106,27 @@ public class User {
         return transactions;
     }
 
-    public List<Book> getMyFavoriteBooks() {
+    public Set<Book> getMyFavoriteBooks() {
         return myFavoriteBooks;
     }
 
-    public void setMyFavoriteBooks(List<Book> myFavoriteBooks) {
+    public void setMyFavoriteBooks(Set<Book> myFavoriteBooks) {
         this.myFavoriteBooks = myFavoriteBooks;
     }
 
-    public List<Book> getBorrowBooks() {
+    public Set<Book> getBorrowBooks() {
         return borrowBooks;
     }
 
-    public void setBorrowBooks(List<Book> borrowBooks) {
+    public void setBorrowBooks(Set<Book> borrowBooks) {
         this.borrowBooks = borrowBooks;
     }
 
-    public List<Book> getMyReservedBooks() {
+    public Set<Book> getMyReservedBooks() {
         return myReservedBooks;
     }
 
-    public void setMyReservedBooks(List<Book> myReservedBooks) {
+    public void setMyReservedBooks(Set<Book> myReservedBooks) {
         this.myReservedBooks = myReservedBooks;
     }
 

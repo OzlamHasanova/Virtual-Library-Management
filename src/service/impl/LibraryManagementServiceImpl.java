@@ -117,7 +117,7 @@ public class LibraryManagementServiceImpl implements LibraryManagementService {
             if (book == null) {
                 throw new BookNotFoundException("Book not found: " + name);
             }
-            user.getMyFavoriteBooks().add(book);
+        user.getMyFavoriteBooks().add(book);
         } catch (BookNotFoundException e) {
             System.err.println(e.getMessage());
         }

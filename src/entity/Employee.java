@@ -6,8 +6,8 @@ import enums.Position;
 import java.time.LocalDate;
 
 public class Employee {
-    private static Long lastEmployeeId=0L;
-    private Long id;
+//    private static Long lastEmployeeId=0L;
+    private int id;
     private String name;
     private String surname;
     private int age;
@@ -20,8 +20,8 @@ public class Employee {
     private Position position;
     private String address;
 
-    public Employee( String name, String surname, int age, double salary, Department department, boolean isEmployer, LocalDate startDate, String email, String phoneNumber, Position position, String address) {
-        this.id = ++lastEmployeeId;
+    public Employee( int id,String name, String surname, int age, double salary, Department department, boolean isEmployer, LocalDate startDate, String email, String phoneNumber, Position position, String address) {
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.age = age;
@@ -36,14 +36,14 @@ public class Employee {
     }
 
     public Employee() {
-        this.id = ++lastEmployeeId;
+//        this.id = ++lastEmployeeId;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -133,5 +133,23 @@ public class Employee {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", age=" + age +
+                ", salary=" + salary +
+                ", department=" + department +
+                ", isEmployer=" + isEmployer +
+                ", startDate=" + startDate +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", position=" + position +
+                ", address='" + address + '\'' +
+                '}';
     }
 }
